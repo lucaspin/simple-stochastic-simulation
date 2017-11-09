@@ -1,4 +1,5 @@
 const fs = require('fs');
+const config = require('./config');
 
 module.exports = {
   generateCSV,
@@ -6,7 +7,8 @@ module.exports = {
   runSimulation,
   generateClients,
   getServiceTimeForClientsOnSystem,
-  randomGenerator
+  randomGenerator,
+  calculateVariance
 }
 
 function randomGenerator (options) {
@@ -57,12 +59,14 @@ function calculateStatistics (data) {
   const totalServiceTime = getTotal('ts');
   const totalQueueTime = getTotal('queueTime');
   const totalSystemTime = getTotal('systemTime');
+  const totalPeopleInLine = getTotal('queueLength');
 
   return {
     freeAttendancyProbability: totalAttendantFreeTime / data[data.length - 1].realTime,
     meanTimeBetweenArrivals: totalTimeBetweenArrivals / data.length,
     meanServiceTime: totalServiceTime / data.length,
     meanQueueTime: totalQueueTime / data.length,
+    meanQueueLength: totalPeopleInLine / data.length,
     meanSystemTime: totalSystemTime / data.length
   }
 
@@ -87,19 +91,19 @@ function generateClients ({serviceTime, timeBetweenArrivals, iteratorCount, rand
 
     if (x <= 0.52) {
       timeBetweenArrivals["0.52"]++;
-      obj.tec = 1;
+      obj.tec = 1 * config.arrivalTimeFactor;
     } else if (x <= 0.8) {
       timeBetweenArrivals["0.8"]++;
-      obj.tec = 3;
+      obj.tec = 3 * config.arrivalTimeFactor;
     } else if (x <= 0.9) {
       timeBetweenArrivals["0.9"]++;
-      obj.tec = 5;
+      obj.tec = 5 * config.arrivalTimeFactor;
     } else if (x <= 0.96) {
       timeBetweenArrivals["0.96"]++;
-      obj.tec = 7;
+      obj.tec = 7 * config.arrivalTimeFactor;
     } else {
       timeBetweenArrivals["1"]++;
-      obj.tec = 9;
+      obj.tec = 9 * config.arrivalTimeFactor;
     }
 
     if (x <= 0.5) {
@@ -189,4 +193,14 @@ function runSimulation (clients) {
       clientBeingServed.remainingServiceTime -= (realTime - lastRow.initialTime)
     }
   }
+}
+
+
+function calculateVariance (values, median) {
+  let sum = 0;
+  values.forEach(function(value) {
+    sum += Math.pow(Math.abs(value - median), 2);
+  });
+
+  return sum / (values.length - 1);
 }
