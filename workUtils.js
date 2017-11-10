@@ -138,7 +138,7 @@ function runSimulation (clients) {
     }
   
     calculateRemainingServiceTime(client, index);
-    checkClientBeingServed(index);
+    checkClientBeingServed(client, index);
   
     let serviceTimeLeft = getServiceTimeForClientsOnSystem(client, queue, clientBeingServed);
     let initialTime = realTime + serviceTimeLeft;
@@ -168,8 +168,12 @@ function runSimulation (clients) {
     }
   }
 
-  function checkClientBeingServed (index) {
-    if (clientBeingServed.remainingServiceTime <= 0) {
+  function checkClientBeingServed (client, index) {
+    if (data.length > 0 && data[data.length - 1].endTime <= realTime) {
+      queue = [];
+      clientBeingServed = client;
+      clientBeingServed.remainingServiceTime = client.ts;
+    } else if (clientBeingServed.remainingServiceTime <= 0) {
       let i = queue.length - 1;
       while (i > 0 && data[index - i].initialTime <= realTime) {
         clientBeingServed = queue.shift();
