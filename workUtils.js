@@ -73,14 +73,18 @@ function calculateStatistics (data) {
   }
 }
 
+/**
+ * NOTE: The implementation for this function sucks, but that's what time allowed me, buddy.
+ * Soon, I'll move to a more dynamic, generic and configuration-oriented approach.
+ */
 function generateClients ({serviceTime, timeBetweenArrivals, iteratorCount, randomGeneratorFn}) {
   var clients = [];
-  
+
   for (let i = 0; i < iteratorCount; i++) {
     x = randomGeneratorFn();
-  
+
     let obj = {};
-  
+
     if (x <= 0.52) {
       timeBetweenArrivals["0.52"]++;
       obj.tec = 1;
@@ -97,7 +101,7 @@ function generateClients ({serviceTime, timeBetweenArrivals, iteratorCount, rand
       timeBetweenArrivals["1"]++;
       obj.tec = 9;
     }
-  
+
     if (x <= 0.5) {
       serviceTime["0.5"]++;
       obj.ts = 1.25;
@@ -114,7 +118,7 @@ function generateClients ({serviceTime, timeBetweenArrivals, iteratorCount, rand
       serviceTime["1"]++;
       obj.ts = 11.25;
     }
-  
+
     obj.id = i;
     clients.push(obj);
   }
@@ -127,7 +131,7 @@ function runSimulation (clients) {
   let clientBeingServed = null;
   let realTime = 0;
   let data = [];
-  
+
   clients.forEach((client, index) => {
     realTime += client.tec;
 
@@ -136,15 +140,15 @@ function runSimulation (clients) {
     } else {
       queue.push(client);
     }
-  
+
     calculateRemainingServiceTime(client, index);
     checkClientBeingServed(client, index);
-  
+
     let serviceTimeLeft = getServiceTimeForClientsOnSystem(client, queue, clientBeingServed);
     let initialTime = realTime + serviceTimeLeft;
     let endTime = initialTime + client.ts;
     let queueTime = initialTime - realTime;
-  
+
     data.push({
       tec: client.tec,
       ts: client.ts,
@@ -180,7 +184,7 @@ function runSimulation (clients) {
         clientBeingServed.remainingServiceTime = clientBeingServed.ts;
         i--;
       }
-  
+
       let lastRow = data[data.length - (i + 1)]
       clientBeingServed.remainingServiceTime -= (realTime - lastRow.initialTime)
     }
