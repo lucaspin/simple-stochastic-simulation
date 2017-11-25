@@ -10,7 +10,7 @@ const T_STUDENT = 1.96;
 console.time('simulation');
 
 for (let i = 0; i <= config.numberOfReplicas; i++) {
-  seed = seed + (i * 10);
+  config.generatorOptions.seed = seed + (i * 10);
   let getNext = utils.randomGenerator(config.generatorOptions);
   let x = seed, y;
   let clients = utils.generateClients({
