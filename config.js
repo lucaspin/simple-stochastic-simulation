@@ -6,7 +6,8 @@ module.exports = {
     module: 2569124957717
   },
   arrivalTimeFactor: 1,
-  iteratorCount: 100,
+  serviceTimeFactor: 1,
+  iteratorCount: 1000,
   numberOfReplicas: 100,
   timeBetweenArrivals: {
     "0.52": 0,

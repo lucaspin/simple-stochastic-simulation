@@ -108,19 +108,19 @@ function generateClients ({serviceTime, timeBetweenArrivals, iteratorCount, rand
 
     if (x <= 0.5) {
       serviceTime["0.5"]++;
-      obj.ts = 1.25;
+      obj.ts = 1.25 * config.serviceTimeFactor;
     } else if (x <= 0.82) {
       serviceTime["0.82"]++;
-      obj.ts = 3.75;
+      obj.ts = 3.75 * config.serviceTimeFactor;
     } else if (x <= 0.9) {
       serviceTime["0.9"]++;
-      obj.ts = 6.25;
+      obj.ts = 6.25 * config.serviceTimeFactor;
     } else if (x <= 0.94) {
       serviceTime["0.94"]++;
-      obj.ts = 8.75;
+      obj.ts = 8.75 * config.serviceTimeFactor;
     } else {
       serviceTime["1"]++;
-      obj.ts = 11.25;
+      obj.ts = 11.25 * config.serviceTimeFactor;
     }
 
     obj.id = i;
