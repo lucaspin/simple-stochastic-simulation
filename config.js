@@ -5,9 +5,9 @@ module.exports = {
     increment: 283,
     module: 2569124957717
   },
-  arrivalTimeFactor: 1,
-  serviceTimeFactor: 1,
-  iteratorCount: 1000,
+  arrivalTimeFactor: 1.08,
+  serviceTimeFactor: 1.15,
+  iteratorCount: 100,
   numberOfReplicas: 100,
   timeBetweenArrivals: {
     "0.52": 0,
